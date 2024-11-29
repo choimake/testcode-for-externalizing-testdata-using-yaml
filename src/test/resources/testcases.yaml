@@ -1,0 +1,69 @@
+# 有効なユーザーかどうか判定するテストのテストケース
+
+# 基礎入力データ
+# 全てのテストケースで共通する基本のデータを定義している
+# ここで設定するすべての値はValidな値
+base_input: &base_input
+  name: "山田太郎"
+  age: 30
+  email: "yamada@example.com"
+  address: "東京都xx区1-1-1"
+  phone: "090-1234-5678"
+  gender: "男性"
+  registration_date: "2024-11-29"
+  subscription_status: true
+
+# テストケース一覧
+# 各ケースは、テストケース名、入力値、期待値、を指定
+#
+# 入力値に関しては、基礎入力データを元に値を入れ、テストに応じて書き換えたい値を別途修正するようにしている
+# これにより、テストに関連する値のみを関心事にするようにしている
+test_cases:
+  - name: "正常な入力"
+    input:
+      <<: *base_input
+    expected:
+      success: true
+      error_message: null
+      generated_id: "USER123"
+      log_message: "Success: User registered"
+
+  - name: "名前が未入力"
+    input:
+      <<: *base_input
+      name: ""
+    expected:
+      success: false
+      error_message: "名前は必須です"
+      generated_id: null
+      log_message: "Error: Missing name"
+
+  - name: "年齢が不正"
+    input:
+      <<: *base_input
+      age: -1
+    expected:
+      success: false
+      error_message: "年齢は0以上である必要があります"
+      generated_id: null
+      log_message: "Error: Invalid age"
+
+  - name: "メールアドレスが不正"
+    input:
+      <<: *base_input
+      email: "invalid-email"
+    expected:
+      success: false
+      error_message: "メールアドレスの形式が不正です"
+      generated_id: null
+      log_message: "Error: Invalid email"
+
+  - name: "電話番号が不正"
+    input:
+      <<: *base_input
+      phone: "09012345678"
+    expected:
+      success: false
+      error_message: "電話番号の形式が不正です"
+      generated_id: null
+      log_message: "Error: Invalid phone number"
